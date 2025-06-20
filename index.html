@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxy Credit Estimator</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom Styles for Proxy Branding -->
+    <style>
+        /* Define theme from Proxy website */
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: #F9F6F2; /* Light cream background */
+            color: #333333;
+        }
+
+        .themed-card {
+            background: #ffffff;
+            border: 1px solid #f0e9e4;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: #E55B3C; /* Proxy's reddish-orange accent */
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #d45031;
+        }
+
+        .btn-secondary {
+            background-color: #fdeee9; /* Lighter version of accent */
+            color: #E55B3C;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #fbdcd2;
+        }
+        
+        .themed-checkbox {
+            appearance: none;
+            background-color: #fff;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.15em;
+            height: 1.15em;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            transform: translateY(-0.075em);
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        .themed-checkbox::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #E55B3C; /* Proxy accent color */
+            transform-origin: bottom left;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+        .themed-checkbox:checked::before {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div id="estimator-root">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl sm:text-5xl font-bold tracking-tight" style="color: #1a1a1a;">
+                Estimate Your Credits
+            </h1>
+            <p class="text-lg mt-3 max-w-3xl mx-auto" style="color: #4b5563;">
+                Select from our services to build a custom package and generate your estimate.
+            </p>
+        </header>
+
+        <!-- Quick-Fill Section -->
+        <div id="quick-fill-section" class="mb-8 themed-card p-6">
+            <h2 class="text-2xl font-bold text-center mb-4" style="color: #1a1a1a;">Quick-Fill Quantities</h2>
+            <p class="text-center text-slate-600 mb-6 max-w-2xl mx-auto text-sm">Enter your campaign scale below to automatically update quantities for relevant selected services.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="num-accounts" class="block text-sm font-medium text-slate-700">Target Accounts</label>
+                    <input type="number" id="num-accounts" min="0" placeholder="e.g., 500" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
+                </div>
+                <div>
+                    <label for="num-contacts" class="block text-sm font-medium text-slate-700">Target Contacts</label>
+                    <input type="number" id="num-contacts" min="0" placeholder="e.g., 1500" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
+                </div>
+                <div>
+                    <label for="num-content" class="block text-sm font-medium text-slate-700">Content Pieces (Monthly)</label>
+                    <input type="number" id="num-content" min="0" placeholder="e.g., 8" class="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
+                </div>
+            </div>
+        </div>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            
+            <!-- Categories Column -->
+            <div id="categories-container" class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Category cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Summary Column -->
+            <div class="lg:sticky top-8">
+                <div id="summary-panel" class="themed-card p-6 md:p-8">
+                     <!-- Prominent 'Schedule a Call' Button -->
+                    <a href="https://calendly.com/jimcusick/call-w-jim" target="_blank" class="w-full flex items-center justify-center gap-2 font-semibold py-3 px-4 rounded-lg btn-secondary mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg>
+                        Schedule a Call
+                    </a>
+
+                    <div class="border-t border-slate-200 pt-6">
+                        <h2 class="text-2xl font-bold text-center mb-4" style="color: #1a1a1a;">Your Estimate</h2>
+                        
+                        <div class="text-center mb-6">
+                            <div class="text-sm uppercase tracking-wider mb-2" style="color: #4b5563;">Total Credits</div>
+                            <div id="total-credits" class="text-5xl font-extrabold" style="color: #E55B3C;">0.00</div>
+                        </div>
+                        
+                        <div id="recommendations" class="mb-6 space-y-4">
+                            <!-- Recommendations will be inserted here -->
+                        </div>
+                        
+                        <button id="download-btn" class="w-full flex items-center justify-center gap-2 font-semibold py-3 px-4 rounded-lg btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Download Report
+                        </button>
+                        <button id="reset-btn" class="w-full text-center text-sm text-slate-500 hover:text-slate-800 mt-4 transition-colors">Reset Selections</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        const servicesData = [
+            // Strategy & Infrastructure Setup
+            { name: 'ICP Creation & Persona Mapping', credits: 10.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Lite CRM Build & Tagging Logic', credits: 27.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Airtable Hosting and Maintenance', credits: 1.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Email Deliverability or CRM QA Audit', credits: 1.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'LinkedIn Profile Makeover', credits: 10.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'LinkedIn Activity Audit', credits: 10.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Brand Voice / Tone Matching', credits: 10.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'TeamLink SetUp and Messaging', credits: 5.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Sales Navigator Saved Searches', credits: 1.00, displayCategory: 'Strategy & Infrastructure Setup' },
+            { name: 'Domain or LinkedIn Profile Warm-Up', credits: 8.00, displayCategory: 'Strategy & Infrastructure Setup' },
+
+            // Data & Research Operations
+            { name: 'Network Analysis', credits: 5.00, displayCategory: 'Data & Research Operations' },
+            { name: 'Source & Qualify Target Accounts', credits: 0.10, unit: 'per account', displayCategory: 'Data & Research Operations' },
+            { name: 'Enrich Account Data (revenue, tech, hiring)', credits: 0.08, unit: 'per account', displayCategory: 'Data & Research Operations' },
+            { name: 'Source & Qualify Target Contacts', credits: 0.04, unit: 'per contact', displayCategory: 'Data & Research Operations' },
+            { name: 'Get Contact Info (email + phone)', credits: 0.04, unit: 'per contact', displayCategory: 'Data & Research Operations' },
+            { name: 'Enrich User Data (activity, awards, news)', credits: 0.04, unit: 'per contact', displayCategory: 'Data & Research Operations' },
+            { name: 'Relationship Mapping', credits: 0.04, unit: 'per account', displayCategory: 'Data & Research Operations' },
+            { name: 'Data Cleanup', credits: 1.00, unit: 'per 25 records', displayCategory: 'Data & Research Operations' },
+
+            // Outbound Engagement & Campaign Execution
+            { name: 'LinkedIn Connection', credits: 0.06, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'LinkedIn Comment', credits: 0.06, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'LinkedIn Reaction', credits: 0.03, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'LinkedIn Post Creation', credits: 4.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'LinkedIn Article Creation', credits: 6.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Repurposed Asset (e.g., Tweet, Carousel, Email)', credits: 3.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Email', credits: 0.08, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Phone Call', credits: 0.09, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Message Frameworks', credits: 2.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Messaging A/B Test + Report Cycle', credits: 4.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Saved Post', credits: 0.05, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Sponsored LinkedIn Content', credits: 5.00, displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Surge Micro-Campaign (e.g., Event, PR Blitz)', credits: 10.00, unit: 'per 100 contacts', displayCategory: 'Outbound Engagement & Campaign Execution' },
+            { name: 'Prospect Handoff/Scheduling', credits: 0.07, displayCategory: 'Outbound Engagement & Campaign Execution' },
+
+            // Reporting & Performance Review
+            { name: 'Performance Review', credits: 6.00, displayCategory: 'Reporting & Performance Review' },
+            { name: 'Monthly Performance Snapshot', credits: 2.00, displayCategory: 'Reporting & Performance Review' },
+            { name: 'Strategy Call + Performance Report', credits: 2.00, unit: 'per 15 mins', displayCategory: 'Reporting & Performance Review' }
+        ];
+
+        const creditPacks = [
+            { size: 100, price: 5000 }, 
+            { size: 250, price: 11250 },
+            { size: 500, price: 20000 }, 
+            { size: 1000, price: 35000 } 
+        ];
+
+        let state = { selectedServices: {} };
+
+        const categoriesContainer = document.getElementById('categories-container');
+        const totalCreditsEl = document.getElementById('total-credits');
+        const recommendationsEl = document.getElementById('recommendations');
+        const downloadBtn = document.getElementById('download-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const numAccountsInput = document.getElementById('num-accounts');
+        const numContactsInput = document.getElementById('num-contacts');
+        const numContentInput = document.getElementById('num-content');
+        
+        const categories = [...new Set(servicesData.map(s => s.displayCategory))];
+
+        const quickFillMapping = {
+            accounts: [
+                'Source & Qualify Target Accounts',
+                'Enrich Account Data (revenue, tech, hiring)',
+                'Relationship Mapping'
+            ],
+            contacts: [
+                'Source & Qualify Target Contacts',
+                'Get Contact Info (email + phone)',
+                'Enrich User Data (activity, awards, news)',
+                'LinkedIn Connection',
+                'Email',
+                'Phone Call'
+            ],
+            content: [
+                'LinkedIn Post Creation',
+                'LinkedIn Article Creation',
+                'Repurposed Asset (e.g., Tweet, Carousel, Email)'
+            ]
+        };
+
+        function render() {
+            renderCategories();
+            const totalCredits = calculateTotalCredits();
+            const recommended = calculateRecommendedPacks(totalCredits);
+            
+            totalCreditsEl.textContent = totalCredits.toFixed(2);
+            renderRecommendations(recommended, totalCredits);
+            downloadBtn.disabled = totalCredits === 0;
+        }
+
+        function renderCategories() {
+            categoriesContainer.innerHTML = '';
+            categories.forEach(category => {
+                const categoryServices = servicesData.filter(s => s.displayCategory === category);
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'themed-card p-6';
+                
+                const servicesHTML = categoryServices.map(service => {
+                    const isChecked = state.selectedServices[service.name] > 0;
+                    const quantity = state.selectedServices[service.name] || 1;
+                    return `
+                        <div class="service-item flex items-center gap-3 py-2 border-b border-slate-100 last:border-b-0">
+                            <input type="checkbox" id="cb-${service.name.replace(/\s/g, '-')}" data-name="${service.name}" class="themed-checkbox flex-shrink-0" ${isChecked ? 'checked' : ''}>
+                            <label for="cb-${service.name.replace(/\s/g, '-')}" class="flex-grow cursor-pointer">
+                                <span class="font-medium text-slate-800">${service.name}</span>
+                                <span class="text-xs text-slate-500 block">${service.credits} credits ${service.unit || ''}</span>
+                            </label>
+                            <input type="number" min="1" value="${quantity}" data-name="${service.name}" class="quantity-input w-16 p-1.5 bg-slate-100 border border-slate-200 rounded-md text-center text-sm ${isChecked ? '' : 'hidden'}">
+                        </div>
+                    `;
+                }).join('');
+
+                categoryCard.innerHTML = `
+                    <h3 class="text-xl font-bold text-center mb-4" style="color:#E55B3C;">${category}</h3>
+                    <div class="space-y-1">${servicesHTML}</div>
+                `;
+                categoriesContainer.appendChild(categoryCard);
+            });
+        }
+
+        function renderRecommendations(recommended, totalCredits) {
+            if (totalCredits === 0) {
+                recommendationsEl.innerHTML = `
+                    <div class="text-center py-6 text-slate-500">
+                        <p class="text-sm">Your recommended package and cost will appear here.</p>
+                    </div>`;
+                return;
+            }
+            recommendationsEl.innerHTML = `
+                <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                    <div class="font-semibold text-orange-800 mb-2 text-sm">Recommended Package</div>
+                    <div class="space-y-1.5">
+                        ${recommended.packs.map(pack => `
+                            <div class="flex justify-between items-center text-sm">
+                                <span class="font-bold text-slate-900">${pack.count}x ${pack.size.toLocaleString()} Credit Pack</span>
+                                <span class="font-semibold text-slate-700">$${(pack.price * pack.count).toLocaleString()}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bg-green-50 border-2 border-green-200 p-4 rounded-lg text-center mt-4">
+                    <div class="text-sm text-green-800 mb-1">Total Investment</div>
+                    <div class="text-3xl font-extrabold text-green-700">$${recommended.totalCost.toLocaleString()}</div>
+                </div>`;
+        }
+
+        function calculateTotalCredits() {
+            return Object.entries(state.selectedServices).reduce((total, [serviceName, quantity]) => {
+                const service = servicesData.find(s => s.name === serviceName);
+                return total + (service ? service.credits * quantity : 0);
+            }, 0);
+        }
+
+        function calculateRecommendedPacks(totalCredits) {
+            if (totalCredits <= 0) return { packs: [], totalCost: 0 };
+            let bestCombination = [];
+            let lowestCost = Infinity;
+
+            function find(target, currentPacks, cost) {
+                if (cost >= lowestCost) return;
+                if (target <= 0) {
+                    lowestCost = cost;
+                    bestCombination = currentPacks;
+                    return;
+                }
+                for (let i = creditPacks.length - 1; i >= 0; i--) {
+                    const pack = creditPacks[i];
+                    find(target - pack.size, [...currentPacks, pack], cost + pack.price);
+                }
+            }
+            find(totalCredits, [], 0);
+
+            const packCounts = bestCombination.reduce((acc, pack) => {
+                acc[pack.size] = (acc[pack.size] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const finalPacks = Object.entries(packCounts).map(([size, count]) => {
+                const packDetails = creditPacks.find(p => p.size == size);
+                return { ...packDetails, count };
+            }).sort((a,b) => b.size - a.size);
+
+            return { packs: finalPacks, totalCost: lowestCost };
+        }
+        
+        function handleSelectionChange(e) {
+            const target = e.target;
+            const serviceName = target.dataset.name;
+            const serviceItem = target.closest('.service-item');
+            if (!serviceName || !serviceItem) return;
+
+            const quantityInput = serviceItem.querySelector('.quantity-input');
+
+            if (target.type === 'checkbox') {
+                if (target.checked) {
+                    let initialQuantity = 1;
+                    const accountsValue = parseInt(numAccountsInput.value) || 0;
+                    const contactsValue = parseInt(numContactsInput.value) || 0;
+                    const contentValue = parseInt(numContentInput.value) || 0;
+
+                    if (accountsValue > 0 && quickFillMapping.accounts.includes(serviceName)) {
+                        initialQuantity = accountsValue;
+                    } else if (contactsValue > 0 && quickFillMapping.contacts.includes(serviceName)) {
+                        initialQuantity = contactsValue;
+                    } else if (contentValue > 0 && quickFillMapping.content.includes(serviceName)) {
+                        initialQuantity = contentValue;
+                    }
+                    if (contactsValue > 0 && serviceName === 'Data Cleanup') {
+                        initialQuantity = Math.ceil(contactsValue / 25);
+                    }
+                    if (contactsValue > 0 && serviceName === 'Surge Micro-Campaign (e.g., Event, PR Blitz)') {
+                         initialQuantity = Math.ceil(contactsValue / 100);
+                    }
+                    
+                    quantityInput.value = initialQuantity;
+                    state.selectedServices[serviceName] = initialQuantity;
+                    quantityInput.classList.remove('hidden');
+                } else {
+                    delete state.selectedServices[serviceName];
+                    quantityInput.classList.add('hidden');
+                }
+            } else if (target.type === 'number') {
+                if (state.selectedServices[serviceName]) {
+                    state.selectedServices[serviceName] = parseInt(target.value) || 1;
+                }
+            }
+            render();
+        }
+        
+        function handleQuickFill(e) {
+            const inputId = e.target.id;
+            const value = parseInt(e.target.value) || 0;
+
+            if (value <= 0) {
+                return;
+            }
+
+            if (inputId === 'num-accounts') {
+                quickFillMapping.accounts.forEach(serviceName => {
+                    if (state.selectedServices[serviceName]) {
+                        state.selectedServices[serviceName] = value;
+                    }
+                });
+            } else if (inputId === 'num-contacts') {
+                quickFillMapping.contacts.forEach(serviceName => {
+                    if (state.selectedServices[serviceName]) {
+                        state.selectedServices[serviceName] = value;
+                    }
+                });
+                if (state.selectedServices['Data Cleanup']) {
+                    state.selectedServices['Data Cleanup'] = Math.ceil(value / 25);
+                }
+                if (state.selectedServices['Surge Micro-Campaign (e.g., Event, PR Blitz)']) {
+                    state.selectedServices['Surge Micro-Campaign (e.g., Event, PR Blitz)'] = Math.ceil(value / 100);
+                }
+            } else if (inputId === 'num-content') {
+                quickFillMapping.content.forEach(serviceName => {
+                    if (state.selectedServices[serviceName]) {
+                        state.selectedServices[serviceName] = value;
+                    }
+                });
+            }
+            render();
+        }
+
+        function handleDownloadReport() {
+            const totalCredits = calculateTotalCredits();
+            const recommended = calculateRecommendedPacks(totalCredits);
+
+            const selectedByCategory = Object.entries(state.selectedServices).reduce((acc, [serviceName, quantity]) => {
+                const service = servicesData.find(s => s.name === serviceName);
+                if (service) {
+                    if (!acc[service.displayCategory]) { acc[service.displayCategory] = []; }
+                    acc[service.displayCategory].push({ ...service, quantity });
+                }
+                return acc;
+            }, {});
+
+            const reportHTML = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Proxy Estimate Report</title>
+                    <style>
+                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 20px; }
+                        #report-content { padding: 20px; border: 1px solid #ddd; border-radius: 8px; background: white; }
+                        h1, h2, h3 { color: #1a1a1a; }
+                        h1 { font-size: 28px; text-align: center; margin-bottom: 20px;}
+                        h2 { font-size: 22px; color: #E55B3C; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 40px; }
+                        h3 { font-size: 18px; margin-bottom: 10px; }
+                        .summary { background-color: #fdfaf6; border: 1px solid #f0e9e4; border-radius: 8px; padding: 20px; margin-top: 20px; }
+                        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0e9e4; }
+                        .summary-item:last-child { border-bottom: none; }
+                        .summary-item strong { color: #1a1a1a; }
+                        .total { background-color: #e6f7ec; padding: 15px; text-align: center; border-radius: 8px; margin-top: 20px; }
+                        .total strong { font-size: 24px; color: #047857; }
+                        ul { list-style: none; padding-left: 0; }
+                        li { background: #fff; border: 1px solid #f0e9e4; padding: 10px 15px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; }
+                        li .credits { color: #555; font-size: 0.9em; }
+                        .call-to-action { text-align: center; margin: 20px 0; padding: 20px; background-color: #fdeee9; border-radius: 8px; }
+                        .call-to-action a { color: #E55B3C; text-decoration: none; font-weight: bold; font-size: 1.1em; }
+                    </style>
+                </head>
+                <body>
+                    <div id="report-content">
+                        <h1>Proxy Estimate Report</h1>
+                        <p style="text-align: center; color: #777;">Generated on: ${new Date().toLocaleDateString()}</p>
+                        <div class="call-to-action">
+                            <p>Want to work with us to build a custom estimate? <a href="https://calendly.com/jimcusick/call-w-jim" target="_blank">Schedule Next Steps</a></p>
+                        </div>
+                        <h2>Selected Services</h2>
+                        ${Object.keys(selectedByCategory).length > 0 ? Object.entries(selectedByCategory).map(([category, services]) => `
+                            <div>
+                                <h3>${category}</h3>
+                                <ul>
+                                    ${services.map(s => `<li><span>${s.quantity}x ${s.name}</span> <span class="credits">${(s.credits * s.quantity).toFixed(2)} credits</span></li>`).join('')}
+                                </ul>
+                            </div>
+                        `).join('') : '<p>No services selected.</p>'}
+                        <h2>Summary</h2>
+                        <div class="summary">
+                            <div class="summary-item">
+                                <span>Total Credits Needed</span>
+                                <strong>${totalCredits.toFixed(2)}</strong>
+                            </div>
+                            ${recommended.packs.map(p => `
+                                <div class="summary-item">
+                                    <span>${p.count}x ${p.size.toLocaleString()} Credit Pack</span>
+                                    <strong>$${(p.price * p.count).toLocaleString()}</strong>
+                                </div>
+                            `).join('')}
+                             <div class="total">
+                                <span>Total Estimated Investment</span><br>
+                                <strong>$${recommended.totalCost.toLocaleString()}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([reportHTML], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Proxy-Estimate.html';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+        
+        function handleReset() {
+            state.selectedServices = {};
+            numAccountsInput.value = '';
+            numContactsInput.value = '';
+            numContentInput.value = '';
+            render();
+        }
+
+        categoriesContainer.addEventListener('change', handleSelectionChange);
+        categoriesContainer.addEventListener('input', handleSelectionChange);
+        downloadBtn.addEventListener('click', handleDownloadReport);
+        resetBtn.addEventListener('click', handleReset);
+        numAccountsInput.addEventListener('input', handleQuickFill);
+        numContactsInput.addEventListener('input', handleQuickFill);
+        numContentInput.addEventListener('input', handleQuickFill);
+        
+        render();
+    });
+    </script>
+</body>
+</html>
